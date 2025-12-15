@@ -280,41 +280,67 @@
     <section class="section" id="factors">
       <div class="container is-max-desktop">
         <h2 class="title is-3">Factor Mining Results</h2>
+    
         <div class="content">
           <p>
-            We mine predictive factors from price and volume information. Categories include:
-          </p>
-          <ul>
-            <li><strong>Momentum:</strong> past returns over multiple horizons, trend indicators.</li>
-            <li><strong>Volatility:</strong> rolling standard deviation, ATR-like measures, intraday range proxies.</li>
-            <li><strong>Technical indicators:</strong> moving averages, RSI, MACD, Bollinger-related features.</li>
-            <li><strong>Volume/flow:</strong> volume change rates, turnover proxies, price-volume divergence signals.</li>
-          </ul>
-          <p>
-            We evaluate factors via correlation with future returns, information coefficient (IC), stability across time,
-            and feature importance from the trained model.
+            We mine predictive factors from price and volume information (momentum, volatility, candlestick shapes,
+            volume/flow). Factor quality is evaluated by Information Coefficient (IC) and rank-based IC.
           </p>
         </div>
-
-        <!-- Factor visuals -->
+    
         <div class="columns is-multiline">
           <div class="column is-6">
-            <figure class="image">
-              <!-- TODO: Put an image at static/images/factor_ic.png -->
-              <img src="static/images/factor_ic.png" alt="Factor IC analysis" loading="lazy">
-            </figure>
-            <p class="has-text-centered is-size-6">Factor IC / predictive correlation (placeholder).</p>
+            <div class="box">
+              <h3 class="title is-6">Top Factors by |Rank-IC|</h3>
+              <figure class="image">
+                <img src="static/images/alpha/top_factors_by_abs_rank_ic.png" alt="Top factors by abs rank IC" loading="lazy">
+              </figure>
+              <p class="has-text-centered is-size-7">Ranking factors by absolute Spearman rank-IC.</p>
+            </div>
           </div>
+    
           <div class="column is-6">
-            <figure class="image">
-              <!-- TODO: Put an image at static/images/feature_importance.png -->
-              <img src="static/images/feature_importance.png" alt="Feature importance" loading="lazy">
-            </figure>
-            <p class="has-text-centered is-size-6">Model feature importance (placeholder).</p>
+            <div class="box">
+              <h3 class="title is-6">Pearson vs Spearman IC</h3>
+              <figure class="image">
+                <img src="static/images/alpha/pearson_vs_spearman_ic.png" alt="Pearson vs Spearman IC" loading="lazy">
+              </figure>
+              <p class="has-text-centered is-size-7">Comparing linear IC (Pearson) and rank IC (Spearman).</p>
+            </div>
           </div>
         </div>
+    
+        <div class="box">
+          <h3 class="title is-6">Top-10 Factors (from IC ranking)</h3>
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth is-size-7">
+              <thead>
+                <tr>
+                  <th>factor</th><th>pearson_ic</th><th>spearman_ic</th><th>abs_rank_ic</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>price_vwap_diff</td><td>-0.1040</td><td>-0.1233</td><td>0.1233</td></tr>
+                <tr><td>ma_20</td><td>-0.0926</td><td>-0.0963</td><td>0.0963</td></tr>
+                <tr><td>ma_5</td><td>-0.0894</td><td>-0.0906</td><td>0.0906</td></tr>
+                <tr><td>volatility_10</td><td>0.1167</td><td>0.0836</td><td>0.0836</td></tr>
+                <tr><td>volatility_20</td><td>0.1184</td><td>0.0775</td><td>0.0775</td></tr>
+                <tr><td>upper_shadow</td><td>0.1070</td><td>0.0638</td><td>0.0638</td></tr>
+                <tr><td>hl_vol</td><td>0.1254</td><td>0.0620</td><td>0.0620</td></tr>
+                <tr><td>lower_ratio</td><td>-0.0692</td><td>-0.0600</td><td>0.0600</td></tr>
+                <tr><td>lower_shadow</td><td>-0.0571</td><td>-0.0561</td><td>0.0561</td></tr>
+                <tr><td>vol_roc_5</td><td>0.0458</td><td>0.0537</td><td>0.0537</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="has-text-centered is-size-7">
+            Factors are computed on the training period and evaluated by IC against future returns.
+          </p>
+        </div>
+    
       </div>
     </section>
+
 
     <!-- Prediction Model -->
     <section class="section hero is-light" id="model">

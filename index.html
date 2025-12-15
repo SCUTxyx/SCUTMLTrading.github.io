@@ -347,54 +347,65 @@
     <section class="section hero is-light" id="model">
       <div class="container is-max-desktop">
         <h2 class="title is-3">Prediction Model and Forecasting Results</h2>
+    
         <div class="content">
           <p>
-            We train a machine learning model to forecast the next-day return (or price). The model type is flexible
-            (e.g., LightGBM/XGBoost, LSTM/Transformer, linear models as baselines). We use the 2018–2023 period for training,
-            and perform out-of-sample evaluation on 2024–2025.
+            We train an XGBoost-based forecasting model using factors mined from price and volume. The model is trained
+            on 2018–2023 and evaluated with time-aware splits (train/valid/test).
           </p>
-
-          <h3 class="title is-5">Training Setup</h3>
-          <ul>
-            <li><strong>Target:</strong> next-day return / direction (define in your report).</li>
-            <li><strong>Validation:</strong> time-series split / walk-forward validation.</li>
-            <li><strong>Metrics:</strong> MAE/RMSE (price), MSE (return), directional accuracy, and correlation with future returns.</li>
-          </ul>
-
-          <h3 class="title is-5">Forecasting Performance</h3>
-          <p>
-            Replace the placeholders below with your final metrics and plots.
-          </p>
-
-          <div class="columns is-multiline">
-            <div class="column is-6">
-              <figure class="image">
-                <!-- TODO: Put an image at static/images/pred_vs_true.png -->
-                <img src="static/images/pred_vs_true.png" alt="Prediction vs. true" loading="lazy">
-              </figure>
-              <p class="has-text-centered is-size-6">Predicted vs. actual (placeholder).</p>
-            </div>
-            <div class="column is-6">
-              <figure class="image">
-                <!-- TODO: Put an image at static/images/model_metrics.png -->
-                <img src="static/images/model_metrics.png" alt="Model metrics" loading="lazy">
-              </figure>
-              <p class="has-text-centered is-size-6">Model metrics table (placeholder).</p>
-            </div>
-          </div>
-
-          <div class="notification is-info is-light">
-            <strong>Fill-in checklist:</strong>
-            <ul style="margin-top: .5rem;">
-              <li>Model name (e.g., LightGBM/LSTM/Transformer) and key hyperparameters</li>
-              <li>Feature window sizes and target definition</li>
-              <li>Out-of-sample forecasting metrics on 2024–2025</li>
-            </ul>
-          </div>
-
         </div>
+    
+        <div class="columns is-multiline">
+          <div class="column is-4">
+            <div class="box">
+              <h3 class="title is-6">Train Forecast (Close)</h3>
+              <figure class="image">
+                <img src="static/images/model/train_forecast_close.png" alt="Train forecast close" loading="lazy">
+              </figure>
+            </div>
+          </div>
+          <div class="column is-4">
+            <div class="box">
+              <h3 class="title is-6">Valid Forecast (Close)</h3>
+              <figure class="image">
+                <img src="static/images/model/valid_forecast_close.png" alt="Valid forecast close" loading="lazy">
+              </figure>
+            </div>
+          </div>
+          <div class="column is-4">
+            <div class="box">
+              <h3 class="title is-6">Test Forecast (Close)</h3>
+              <figure class="image">
+                <img src="static/images/model/test_forecast_close.png" alt="Test forecast close" loading="lazy">
+              </figure>
+            </div>
+          </div>
+        </div>
+    
+        <div class="box">
+          <h3 class="title is-6">Model Evaluation Summary</h3>
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth is-size-7">
+              <thead>
+                <tr>
+                  <th>split</th><th>mae</th><th>rmse</th><th>spearman_ic</th><th>direction_acc</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>train</td><td>0.0181</td><td>0.0257</td><td>1.0000</td><td>98.86%</td></tr>
+                <tr><td>valid</td><td>6.3936</td><td>8.6984</td><td>-0.0474</td><td>48.76%</td></tr>
+                <tr><td>test</td><td>7.8201</td><td>10.6094</td><td>-0.0055</td><td>48.13%</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="is-size-7">
+            We use the model score mainly for relative ranking and trading signal generation rather than pure price-level accuracy.
+          </p>
+        </div>
+    
       </div>
     </section>
+
 
     <!-- Strategies Comparison -->
     <section class="section" id="strategies">

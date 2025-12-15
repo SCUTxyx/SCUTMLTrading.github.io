@@ -203,29 +203,56 @@
     <section class="section">
       <div class="container is-max-desktop">
         <h2 class="title is-3">Raw Stock Data</h2>
+    
         <div class="content">
           <p>
-            We use daily OHLCV-style data for Tencent stock. Typical fields include <em>Open, High, Low, Close, Volume</em>
-            (and potentially additional fields depending on the dataset). We split the timeline into:
+            We use Tencent daily OHLCV-style data. The dataset spans <strong>2018-01-02</strong> to
+            <strong>2025-04-24</strong> with <strong>1,797</strong> trading-day records and the following fields:
+            <code>timestamps, open, high, low, close, volume, amount</code>.
           </p>
+    
           <ul>
-            <li><strong>Training set:</strong> 2018-01-01 to 2023-12-31 (for feature/parameter learning)</li>
-            <li><strong>Backtest set:</strong> 2024-01-01 to 2025-04-24 (for out-of-sample strategy evaluation)</li>
+            <li><strong>Training set:</strong> 2018-01-02 to 2023-12-31</li>
+            <li><strong>Backtest set:</strong> 2024-01-01 to 2025-04-24</li>
           </ul>
+    
           <p>
-            <strong>Files:</strong> place your raw-data description or sample file list in <code>static/data.csv</code>
-            (or link to your dataset location).
+            Full data file:
+            <a href="static/data.csv" target="_blank" rel="noopener">static/data.csv</a>
           </p>
         </div>
-
-        <!-- Optional: show a data snapshot image -->
-        <div class="content">
-          <!-- TODO: Put an image at static/images/data_snapshot.png or remove this block -->
+    
+        <div class="box">
+          <h3 class="title is-6">Pipeline Overview</h3>
           <figure class="image">
-            <img src="static/images/data_snapshot.png" alt="Raw data snapshot (example)" loading="lazy">
+            <img src="static/images/workflow.png" alt="End-to-end workflow" loading="lazy">
           </figure>
-          <p class="has-text-centered is-size-6">Example: a snapshot of the raw daily stock dataset (optional).</p>
+          <p class="has-text-centered is-size-7">
+            End-to-end workflow: data → factor mining → ML forecasting → signal → strategy → evaluation.
+          </p>
         </div>
+    
+        <div class="box">
+          <h3 class="title is-6">Data Preview (first 6 rows)</h3>
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth is-size-7">
+              <thead>
+                <tr>
+                  <th>timestamps</th><th>open</th><th>high</th><th>low</th><th>close</th><th>volume</th><th>amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>2018-01-02</td><td>364.39</td><td>374.39</td><td>363.99</td><td>374.19</td><td>240,805</td><td>10.01B</td></tr>
+                <tr><td>2018-01-03</td><td>380.39</td><td>383.19</td><td>375.39</td><td>378.59</td><td>227,802</td><td>9.64B</td></tr>
+                <tr><td>2018-01-04</td><td>383.39</td><td>388.79</td><td>380.59</td><td>388.19</td><td>279,045</td><td>11.97B</td></tr>
+                <tr><td>2018-01-05</td><td>392.79</td><td>392.79</td><td>384.59</td><td>389.59</td><td>199,584</td><td>8.61B</td></tr>
+                <tr><td>2018-01-08</td><td>392.59</td><td>395.59</td><td>390.19</td><td>394.99</td><td>179,948</td><td>7.86B</td></tr>
+                <tr><td>2018-01-09</td><td>397.39</td><td>402.79</td><td>395.39</td><td>400.19</td><td>244,765</td><td>10.85B</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    
       </div>
     </section>
 

@@ -459,85 +459,72 @@
     <section class="section hero is-light" id="results">
       <div class="container is-max-desktop">
         <h2 class="title is-3">Final Strategy Results</h2>
-
+    
         <div class="content">
           <p>
-            The final strategy integrates prediction signals with risk control to balance return and drawdown.
-            Below we report the main backtest results from 2024-01-01 to 2025-04-24 with initial capital 100,000 CNY.
+            We select <strong>Conviction_Filter_Strategy</strong> from <code>script/final</code> as the final submission.
+            The backtest runs from <strong>2024-01-01</strong> to <strong>2025-04-24</strong> with initial capital
+            <strong>100,000 CNY</strong>.
           </p>
-
-          <h3 class="title is-5">Key Parameters and Risk Controls</h3>
-          <ul>
-            <li><strong>Signal:</strong> predicted next-day return / direction.</li>
-            <li><strong>Entry/Exit:</strong> threshold-based or ranking-based rules.</li>
-            <li><strong>Position sizing:</strong> fixed fraction / volatility targeting / capped leverage.</li>
-            <li><strong>Risk management:</strong> max drawdown guard, stop-loss (optional), exposure constraints.</li>
-            <li><strong>Transaction costs:</strong> include fees/slippage assumption in your report.</li>
-          </ul>
-
-          <h3 class="title is-5">Equity Curve and Excess Return</h3>
-          <div class="columns is-multiline">
-            <div class="column is-12">
-              <figure class="image">
-                <!-- TODO: Put an image at static/images/final_equity_curve.png -->
-                <img src="static/images/final_equity_curve.png" alt="Final equity curve" loading="lazy">
-              </figure>
-              <p class="has-text-centered is-size-6">Final strategy equity curve vs baseline (placeholder).</p>
-            </div>
-            <div class="column is-12">
-              <figure class="image">
-                <!-- TODO: Put an image at static/images/final_excess_return.png -->
-                <img src="static/images/final_excess_return.png" alt="Final excess return" loading="lazy">
-              </figure>
-              <p class="has-text-centered is-size-6">Excess return curve (placeholder).</p>
+        </div>
+    
+        <div class="columns is-multiline">
+          <div class="column is-6">
+            <div class="box">
+              <h3 class="title is-6">Equity Curve (NAV)</h3>
+              <iframe src="static/images/final/report_nav_curve.pdf#view=FitH"
+                      width="100%" height="460" style="border:0; border-radius:12px;" title="NAV curve"></iframe>
+              <p class="has-text-centered is-size-7">Net asset value curve over the backtest window.</p>
             </div>
           </div>
-
-          <h3 class="title is-5">Performance & Risk Metrics</h3>
-          <p>
-            Replace the placeholders with your final computed metrics:
-          </p>
-
+    
+          <div class="column is-6">
+            <div class="box">
+              <h3 class="title is-6">Drawdown Curve</h3>
+              <iframe src="static/images/final/report_drawdown_curve.pdf#view=FitH"
+                      width="100%" height="460" style="border:0; border-radius:12px;" title="Drawdown curve"></iframe>
+              <p class="has-text-centered is-size-7">Drawdown comparison (risk control effectiveness).</p>
+            </div>
+          </div>
+    
+          <div class="column is-12">
+            <div class="box">
+              <h3 class="title is-6">Position / Exposure Over Time</h3>
+              <iframe src="static/images/final/report_position_curve.pdf#view=FitH"
+                      width="100%" height="520" style="border:0; border-radius:12px;" title="Position curve"></iframe>
+              <p class="has-text-centered is-size-7">Discrete exposure levels (0 / 0.5 / 1) driven by signal + thresholds.</p>
+            </div>
+          </div>
+        </div>
+    
+        <div class="box">
+          <h3 class="title is-6">Performance & Risk Metrics</h3>
           <div class="table-container">
             <table class="table is-striped is-fullwidth">
               <thead>
                 <tr>
                   <th>Metric</th>
                   <th>Final Strategy</th>
-                  <th>Buy & Hold</th>
+                  <th>Buy &amp; Hold</th>
                 </tr>
               </thead>
               <tbody>
-                <tr><td>Cumulative Return</td><td>TODO</td><td>TODO</td></tr>
-                <tr><td>Annualized Return</td><td>TODO</td><td>TODO</td></tr>
-                <tr><td>Annualized Volatility</td><td>TODO</td><td>TODO</td></tr>
-                <tr><td>Sharpe Ratio</td><td>TODO</td><td>TODO</td></tr>
-                <tr><td>Maximum Drawdown</td><td>TODO</td><td>TODO</td></tr>
-                <tr><td>Calmar Ratio</td><td>TODO</td><td>TODO</td></tr>
-                <tr><td>Win Rate (Trades)</td><td>TODO</td><td>—</td></tr>
-                <tr><td>Turnover</td><td>TODO</td><td>Low</td></tr>
+                <tr><td>Final Value (CNY)</td><td>224,877.5</td><td>163,127.2</td></tr>
+                <tr><td>Total Return</td><td>124.88%</td><td>63.13%</td></tr>
+                <tr><td>Annualized Return</td><td>89.30%</td><td>47.02%</td></tr>
+                <tr><td>Annualized Volatility</td><td>27.00%</td><td>34.32%</td></tr>
+                <tr><td>Sharpe Ratio</td><td>3.31</td><td>1.37</td></tr>
+                <tr><td>Maximum Drawdown</td><td>-12.93%</td><td>-23.49%</td></tr>
+                <tr><td>Calmar Ratio</td><td>6.91</td><td>2.00</td></tr>
               </tbody>
             </table>
           </div>
-
-          <div class="columns is-multiline">
-            <div class="column is-6">
-              <figure class="image">
-                <!-- TODO: Put an image at static/images/final_drawdown.png -->
-                <iframe src="static/images/report_drawdown_curve.pdf" alt="Final drawdown curve" loading="lazy">
-              </figure>
-              <p class="has-text-centered is-size-6">Drawdown curve (placeholder).</p>
-            </div>
-            <div class="column is-6">
-              <figure class="image">
-                <!-- TODO: Put an image at static/images/trade_analysis.png -->
-                <img src="static/images/trade_analysis.png" alt="Trade analysis" loading="lazy">
-              </figure>
-              <p class="has-text-centered is-size-6">Trade distribution / holding period / PnL histogram (placeholder).</p>
-            </div>
-          </div>
-
+    
+          <p class="is-size-7">
+            The final strategy improves both return and drawdown compared to Buy &amp; Hold, achieving stronger risk-adjusted performance.
+          </p>
         </div>
+    
       </div>
     </section>
 

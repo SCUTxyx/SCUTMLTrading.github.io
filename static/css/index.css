@@ -343,6 +343,74 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
+/* Factor carousel: sliding track with two PDFs per slide */
+.factor-carousel {
+  position: relative;
+}
+
+.factor-viewport {
+  overflow: hidden;
+}
+
+.factor-track {
+  display: flex;
+  transition: transform 0.5s ease;
+  will-change: transform;
+}
+
+.factor-slide {
+  min-width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0;
+  display: flex;
+  gap: 1rem;
+}
+
+.factor-panel {
+  flex: 1 1 50%;
+  min-width: 0;
+}
+
+.factor-pdf {
+  width: 100%;
+  height: 520px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.factor-caption {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.factor-carousel-nav .nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary-color);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+}
+
+.factor-carousel-nav .nav-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 880px) {
+  .factor-slide { flex-direction: column; }
+  .factor-panel { flex-basis: 100%; }
+  .factor-pdf { height: 360px; }
+}
+
 /* Pagination and Misc Improvements */
 .slider-pagination .slider-page {
   background: var(--primary-color);

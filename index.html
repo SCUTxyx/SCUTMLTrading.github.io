@@ -581,84 +581,47 @@
         </div>
     
         <!-- Part 2: final strategy + horizon variants -->
+        <!-- Part II — Our Final Strategy and Horizon Variants -->
         <div class="box">
           <h3 class="title is-4">Part II — Our Final Strategy and Horizon Variants</h3>
-    
+        
           <div class="content">
             <h4 class="title is-5">Final Strategy: Conviction_Filter_Strategy</h4>
             <p>
-              Our final submission is a <strong>conviction-based long-only strategy</strong>. Each day we compute a blended score
-              from (i) the standardized ML predicted return score and (ii) a composite alpha-factor score:
+              Our final submission is a <strong>conviction-based long-only strategy</strong>. Each day we compute a blended
+              score from (i) the standardized ML predicted return score and (ii) a composite alpha-factor score:
               <br>
               <code>score_t = w_pred · z(r_pred)_t + w_alpha · alpha_score_t</code>.
             </p>
             <p>
-              We then compute rolling quantile thresholds from recent score history (lookback window) and map
-              score into <strong>discrete exposure</strong>: 0 / 0.5 / 1.0. This design improves robustness and reduces turnover
-              compared to continuous leverage scaling.
+              We then compute rolling <strong>quantile-based thresholds</strong> on recent score history (lookback window) and map
+              today's score into <strong>discrete exposure</strong>: 0 / 0.5 / 1.0. This design aims to reduce over-trading while
+              keeping the strategy responsive to meaningful signal changes.
             </p>
-    
+        
             <h4 class="title is-6">Ablation-selected best parameters</h4>
             <ul>
-              <li><strong>Best weights:</strong> <code>w_alpha = 0.22</code>, <code>w_pred = 0.78</code> (found by grid ablation).</li>
-              <li><strong>Best thresholds:</strong> <code>q_exit = 0.09</code>, <code>q_half = 0.12</code> (found by grid ablation with constraint <code>q_exit &lt; q_half</code>).</li>
+              <li><strong>Best weights:</strong> <code>w_alpha = 0.22</code>, <code>w_pred = 0.78</code> (grid ablation).</li>
+              <li><strong>Best thresholds:</strong> <code>q_exit = 0.09</code>, <code>q_half = 0.12</code> (grid ablation with <code>q_exit &lt; q_half</code>).</li>
             </ul>
           </div>
-    
-          <h4 class="title is-5">Final Strategy Performance (Overall)</h4>
-          <div class="table-container">
-            <table class="table is-striped is-fullwidth is-size-7">
-              <thead>
-                <tr>
-                  <th>Strategy</th>
-                  <th>Final Value (CNY)</th>
-                  <th>Total Return</th>
-                  <th>Annual Return</th>
-                  <th>Annual Vol</th>
-                  <th>Sharpe</th>
-                  <th>Max Drawdown</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Benchmark_BuyAndHold</td>
-                  <td>163,127.2</td>
-                  <td>63.13%</td>
-                  <td>47.02%</td>
-                  <td>34.32%</td>
-                  <td>1.37</td>
-                  <td>-23.49%</td>
-                </tr>
-                <tr>
-                  <td><strong>Conviction_Filter_Strategy (Final)</strong></td>
-                  <td><strong>224,877.5</strong></td>
-                  <td><strong>124.88%</strong></td>
-                  <td><strong>89.30%</strong></td>
-                  <td><strong>27.00%</strong></td>
-                  <td><strong>3.31</strong></td>
-                  <td><strong>-12.93%</strong></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-    
+        
+          <h4 class="title is-5">Horizon Comparison (pre1 / pre3 / pre5 / 10-day→1-day)</h4>
           <div class="content">
-            <h4 class="title is-5">Horizon Variants (pre1 / pre3 / pre5 / 10-day→1-day)</h4>
             <p>
-              To test robustness, we run the same strategy logic under four forecasting settings:
+              To test robustness, we run the <em>same trading logic</em> under four forecasting settings. The main focus here is the
+              trade-off among <strong>1-day / 3-day / 5-day horizons</strong>. The <strong>10-day → 1-day</strong> setting is included
+              for completeness and will be discussed in more detail in a later section.
             </p>
+        
             <ul>
-              <li><strong>pre1:</strong> predict the next-day return and trade daily.</li>
-              <li><strong>pre3:</strong> predict 3-day ahead (smoother signal, potentially lower noise but more lag).</li>
-              <li><strong>pre5:</strong> predict 5-day ahead (even smoother, but may react slower to regime changes).</li>
-              <li><strong>10-day window → 1-day prediction:</strong> use the previous 10 trading days as input features to predict next-day return (more context for short-horizon prediction).</li>
+              <li><strong>pre1 (1-day ahead):</strong> maximally responsive, but more sensitive to noise and regime flips.</li>
+              <li><strong>pre3 (3-day ahead):</strong> smoother signal; often reduces whipsaws while keeping decent responsiveness.</li>
+              <li><strong>pre5 (5-day ahead):</strong> even smoother; can further reduce over-trading but may lag turning points.</li>
+              <li><strong>10-day window → 1-day pred:</strong> richer short-term context for next-day prediction (discussed later).</li>
             </ul>
-            <p class="is-size-7">
-              Below is the table template. Replace the TODO cells with the values from your
-              <code>backtest_results_longonly.csv</code> (pre1/pre3/pre5/10→1). If you paste that CSV here, I can fill the table for you.
-            </p>
           </div>
-    
+        
           <div class="table-container">
             <table class="table is-striped is-fullwidth is-size-7">
               <thead>
@@ -670,40 +633,83 @@
                   <th>Annual Vol</th>
                   <th>Sharpe</th>
                   <th>Max Drawdown</th>
-                  <th>Interpretation</th>
+                  <th>Signal Behavior (Summary)</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>pre1 (1-day ahead)</td>
+                  <td><strong>pre1</strong> (1-day ahead)</td>
                   <td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td>
-                  <td>Most responsive, but most sensitive to noise.</td>
+                  <td>Most responsive; strongest timing ability, but highest sensitivity to noise.</td>
                 </tr>
                 <tr>
-                  <td>pre3 (3-day ahead)</td>
+                  <td><strong>pre3</strong> (3-day ahead)</td>
                   <td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td>
-                  <td>Smoother signal; may reduce whipsaws but can lag turning points.</td>
+                  <td>Smoother than pre1; often reduces whipsaws with moderate lag.</td>
                 </tr>
                 <tr>
-                  <td>pre5 (5-day ahead)</td>
+                  <td><strong>pre5</strong> (5-day ahead)</td>
                   <td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td>
-                  <td>Even smoother; can miss fast rebounds but improves stability.</td>
+                  <td>Smoothest among 1/3/5; may miss fast reversals but improves stability.</td>
                 </tr>
                 <tr>
                   <td>10-day window → 1-day pred</td>
                   <td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td>
-                  <td>Uses richer short-term context; often improves robustness vs pure 1-day inputs.</td>
+                  <td>Uses richer short-term context; detailed discussion in the next section.</td>
                 </tr>
               </tbody>
             </table>
           </div>
-    
-          <div class="notification is-warning is-light">
-            <strong>Note:</strong> If a longer-horizon variant underperforms, it is often because the signal reacts slower to
-            fast price moves. If a shorter-horizon variant underperforms, it is often due to noise and frequent regime flips.
+        
+          <div class="content">
+            <h4 class="title is-5">Interpreting the 1 / 3 / 5-day Trade-off</h4>
+        
+            <h5 class="title is-6">Why horizons matter</h5>
+            <p>
+              Short-horizon forecasts (pre1) typically react faster to new information but are exposed to higher day-to-day noise.
+              Longer-horizon forecasts (pre3/pre5) can be more stable because they implicitly average over near-term fluctuations,
+              but they may introduce lag when the market regime changes.
+            </p>
+        
+            <h5 class="title is-6">Advantages &amp; disadvantages</h5>
+            <ul>
+              <li>
+                <strong>pre1 (1-day ahead)</strong>:
+                <ul>
+                  <li><em>Pros:</em> reacts quickly to turning points; potentially captures short bursts and avoids sudden drops earlier.</li>
+                  <li><em>Cons:</em> more false positives (whipsaws); more frequent signal flips; performance can degrade if the prediction IC is weak.</li>
+                </ul>
+              </li>
+        
+              <li>
+                <strong>pre3 (3-day ahead)</strong>:
+                <ul>
+                  <li><em>Pros:</em> smoother signal than pre1; often improves robustness and reduces over-trading; a good balance between responsiveness and stability.</li>
+                  <li><em>Cons:</em> may lag the earliest part of fast reversals; can miss the first segment of a rapid trend.</li>
+                </ul>
+              </li>
+        
+              <li>
+                <strong>pre5 (5-day ahead)</strong>:
+                <ul>
+                  <li><em>Pros:</em> most stable of the three; tends to reduce noise-driven trading; can improve drawdown control in choppy markets.</li>
+                  <li><em>Cons:</em> slower reaction to regime changes; may underperform in strong trending phases or V-shaped recoveries due to delayed re-entry.</li>
+                </ul>
+              </li>
+            </ul>
+        
+            <div class="notification is-info is-light">
+              <strong>Practical takeaway:</strong> If the market is noisy and mean-reverting, longer horizons (pre3/pre5) tend to help.
+              If the market shows rapid regime shifts, pre1 can adapt faster but requires stronger signal quality to avoid whipsaws.
+            </div>
+        
+            <p class="is-size-7">
+              The <strong>10-day window → 1-day</strong> setting is included in the table for completeness; we will analyze it separately
+              (feature window design, short-term context, and why it can improve next-day decisions).
+            </p>
           </div>
         </div>
-      </div>
+
     </section>
 
     <!-- Weight & Quantile Threshold Selection (Ablation) -->

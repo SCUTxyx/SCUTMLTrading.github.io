@@ -855,78 +855,154 @@
 
 
     <!-- Final Strategy Results -->
+    <!-- Final Strategy Results (PNG version) -->
     <section class="section hero is-light" id="results">
       <div class="container is-max-desktop">
         <h2 class="title is-3">Final Strategy Results</h2>
     
         <div class="content">
           <p>
-            We select <strong>Conviction_Filter_Strategy</strong> from <code>script/final</code> as the final submission.
-            The backtest runs from <strong>2024-01-01</strong> to <strong>2025-04-24</strong> with initial capital
-            <strong>100,000 CNY</strong>.
+            We select <strong>Conviction_Filter_Strategy</strong> as the final submission. The backtest runs from
+            <strong>2024-01-01</strong> to <strong>2025-04-24</strong> with initial capital <strong>100,000 CNY</strong>.
+            Below we visualize return, risk, exposure, and signal effectiveness. All figures are rendered as high-resolution PNGs.
           </p>
         </div>
     
-        <!-- PDF figures (large, full width) -->
+        <!-- At-a-glance metrics -->
+        <div class="columns is-multiline">
+          <div class="column is-3">
+            <div class="box has-text-centered">
+              <p class="is-size-7 has-text-grey">Final Value</p>
+              <p class="title is-5" style="margin:.25rem 0;">224,877.5</p>
+              <p class="is-size-7 has-text-grey">CNY</p>
+            </div>
+          </div>
+          <div class="column is-3">
+            <div class="box has-text-centered">
+              <p class="is-size-7 has-text-grey">Total Return</p>
+              <p class="title is-5" style="margin:.25rem 0;">124.88%</p>
+              <p class="is-size-7 has-text-grey">vs 63.13% Buy &amp; Hold</p>
+            </div>
+          </div>
+          <div class="column is-3">
+            <div class="box has-text-centered">
+              <p class="is-size-7 has-text-grey">Sharpe</p>
+              <p class="title is-5" style="margin:.25rem 0;">3.31</p>
+              <p class="is-size-7 has-text-grey">vs 1.37 Buy &amp; Hold</p>
+            </div>
+          </div>
+          <div class="column is-3">
+            <div class="box has-text-centered">
+              <p class="is-size-7 has-text-grey">Max Drawdown</p>
+              <p class="title is-5" style="margin:.25rem 0;">-12.93%</p>
+              <p class="is-size-7 has-text-grey">vs -23.49% Buy &amp; Hold</p>
+            </div>
+          </div>
+        </div>
+    
+        <!-- 5 PNG Figures -->
         <div class="columns is-multiline">
     
-          <div class="column is-12">
+          <!-- (1) NAV -->
+          <div class="column is-6">
             <div class="box">
               <h3 class="title is-6">Equity Curve (NAV)</h3>
-              <object
-                data="static/images/report_nav_curve.pdf#page=1&zoom=page-width"
-                type="application/pdf"
-                width="80%"
-                height="250">
-                <p class="has-text-centered is-size-7">
-                  PDF preview is not available in this browser.
-                </p>
-              </object>
-              <p class="has-text-centered is-size-7" style="margin-top:.5rem;">
-                Net asset value curve over the backtest window.
+              <figure class="image">
+                <img
+                  src="static/images/report_nav_curve.png"
+                  alt="NAV curve comparison"
+                  loading="lazy"
+                  style="width:100%; height:auto; display:block;"
+                >
+              </figure>
+              <p class="has-text-centered is-size-7" style="margin-top:.6rem;">
+                <strong>Stronger growth with smoother trajectory.</strong> Our NAV stays above the benchmark for most of the
+                backtest, confirming consistent excess return from the ML + factor conviction signal.
               </p>
             </div>
           </div>
     
-          <div class="column is-12">
+          <!-- (2) Drawdown -->
+          <div class="column is-6">
             <div class="box">
               <h3 class="title is-6">Drawdown Curve</h3>
-              <object
-                data="static/images/report_drawdown_curve.pdf#page=1&zoom=page-width"
-                type="application/pdf"
-                width="80%"
-                height="250">
-                <p class="has-text-centered is-size-7">
-                  PDF preview is not available in this browser.
-                </p>
-              </object>
-              <p class="has-text-centered is-size-7" style="margin-top:.5rem;">
-                Drawdown comparison (risk control effectiveness).
+              <figure class="image">
+                <img
+                  src="static/images/report_drawdown_curve.png"
+                  alt="Drawdown curve comparison"
+                  loading="lazy"
+                  style="width:100%; height:auto; display:block;"
+                >
+              </figure>
+              <p class="has-text-centered is-size-7" style="margin-top:.6rem;">
+                <strong>Downside risk is controlled.</strong> The final strategy cuts max drawdown to <strong>-12.93%</strong>
+                (vs <strong>-23.49%</strong> Buy &amp; Hold), showing the quantile-based de-risking rule effectively limits large losses.
               </p>
             </div>
           </div>
     
+          <!-- (3) Position / Exposure (full width) -->
           <div class="column is-12">
             <div class="box">
               <h3 class="title is-6">Position / Exposure Over Time</h3>
-              <object
-                data="static/images/report_position_curve.pdf#page=1&zoom=page-width"
-                type="application/pdf"
-                width="80%"
-                height="250">
-                <p class="has-text-centered is-size-7">
-                  PDF preview is not available in this browser.
-                </p>
-              </object>
-              <p class="has-text-centered is-size-7" style="margin-top:.5rem;">
-                Discrete exposure levels (0 / 0.5 / 1) driven by signal + thresholds.
+              <figure class="image">
+                <img
+                  src="static/images/report_position_curve.png"
+                  alt="Position/exposure over time"
+                  loading="lazy"
+                  style="width:100%; height:auto; display:block;"
+                >
+              </figure>
+              <p class="has-text-centered is-size-7" style="margin-top:.6rem;">
+                <strong>Stable, interpretable decisions (0 / 0.5 / 1).</strong> Instead of noisy continuous leverage,
+                the strategy maps conviction into discrete exposure, reducing whipsaws and turnover while staying invested
+                when the signal is strong.
+              </p>
+            </div>
+          </div>
+    
+          <!-- (4) Quantile return -->
+          <div class="column is-6">
+            <div class="box">
+              <h3 class="title is-6">Return by Score Quantile</h3>
+              <figure class="image">
+                <img
+                  src="static/images/report_quantile_return.png"
+                  alt="Return by score quantile"
+                  loading="lazy"
+                  style="width:100%; height:auto; display:block;"
+                >
+              </figure>
+              <p class="has-text-centered is-size-7" style="margin-top:.6rem;">
+                <strong>Clear ranking power.</strong> Higher conviction quantiles correspond to higher realized returns,
+                validating that the blended score (ML prediction + alpha factors) contains actionable information for timing.
+              </p>
+            </div>
+          </div>
+    
+          <!-- (5) Score + thresholds -->
+          <div class="column is-6">
+            <div class="box">
+              <h3 class="title is-6">Score &amp; Rolling Thresholds</h3>
+              <figure class="image">
+                <img
+                  src="static/images/report_score_thresholds.png"
+                  alt="Score and rolling quantile thresholds"
+                  loading="lazy"
+                  style="width:100%; height:auto; display:block;"
+                >
+              </figure>
+              <p class="has-text-centered is-size-7" style="margin-top:.6rem;">
+                <strong>Adaptive risk control.</strong> Rolling quantile thresholds (<code>q_exit</code>, <code>q_half</code>)
+                adapt to distribution shifts in the score, helping the strategy reduce exposure during weak-conviction regimes
+                and re-risk when conviction improves.
               </p>
             </div>
           </div>
     
         </div>
     
-        <!-- Metrics table -->
+        <!-- Detailed metrics table -->
         <div class="box">
           <h3 class="title is-6">Performance &amp; Risk Metrics</h3>
           <div class="table-container">
@@ -939,24 +1015,27 @@
                 </tr>
               </thead>
               <tbody>
-                <tr><td>Final Value (CNY)</td><td>224,877.5</td><td>163,127.2</td></tr>
-                <tr><td>Total Return</td><td>124.88%</td><td>63.13%</td></tr>
-                <tr><td>Annualized Return</td><td>89.30%</td><td>47.02%</td></tr>
-                <tr><td>Annualized Volatility</td><td>27.00%</td><td>34.32%</td></tr>
-                <tr><td>Sharpe Ratio</td><td>3.31</td><td>1.37</td></tr>
-                <tr><td>Maximum Drawdown</td><td>-12.93%</td><td>-23.49%</td></tr>
-                <tr><td>Calmar Ratio</td><td>6.91</td><td>2.00</td></tr>
+                <tr><td>Final Value (CNY)</td><td><strong>224,877.5</strong></td><td>163,127.2</td></tr>
+                <tr><td>Total Return</td><td><strong>124.88%</strong></td><td>63.13%</td></tr>
+                <tr><td>Annualized Return</td><td><strong>89.30%</strong></td><td>47.02%</td></tr>
+                <tr><td>Annualized Volatility</td><td><strong>27.00%</strong></td><td>34.32%</td></tr>
+                <tr><td>Sharpe Ratio</td><td><strong>3.31</strong></td><td>1.37</td></tr>
+                <tr><td>Maximum Drawdown</td><td><strong>-12.93%</strong></td><td>-23.49%</td></tr>
+                <tr><td>Calmar Ratio</td><td><strong>6.91</strong></td><td>2.00</td></tr>
               </tbody>
             </table>
           </div>
     
-          <p class="is-size-7">
-            The final strategy improves both return and drawdown compared to Buy &amp; Hold, achieving stronger risk-adjusted performance.
-          </p>
+          <div class="notification is-info is-light" style="margin-top:1rem;">
+            <strong>Why this is strong:</strong> The strategy achieves much higher return than Buy &amp; Hold while simultaneously
+            lowering volatility and drawdown. This indicates the conviction score + quantile thresholds are not just profitable,
+            but also effective at controlling risk.
+          </div>
         </div>
     
       </div>
     </section>
+
 
     <!-- Evaluation (Strengths Only) -->
     <section class="section" id="evaluation">

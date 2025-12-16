@@ -186,27 +186,35 @@ function setupForecastCarousel() {
     showSlide(current);
 }
 
-$(document).ready(function() {
-    // Check for click events on the navbar burger icon
-
+function initPage() {
     var options = {
-		slidesToScroll: 1,
-		slidesToShow: 1,
-		loop: true,
-		infinite: true,
-		autoplay: true,
-		autoplaySpeed: 5000,
+        slidesToScroll: 1,
+        slidesToShow: 1,
+        loop: true,
+        infinite: true,
+        autoplay: true,
+        autoplaySpeed: 5000,
+    };
+
+    // Initialize all div with carousel class (if plugin is available)
+    if (typeof bulmaCarousel !== 'undefined') {
+        bulmaCarousel.attach('.carousel', options);
     }
 
-	// Initialize all div with carousel class
-    var carousels = bulmaCarousel.attach('.carousel', options);
-	
-    bulmaSlider.attach();
-    
+    if (typeof bulmaSlider !== 'undefined') {
+        bulmaSlider.attach();
+    }
+
     // Setup video autoplay for carousel
     setupVideoCarouselAutoplay();
 
     // Setup custom forecast carousel
     setupForecastCarousel();
+}
 
-})
+// Prefer jQuery ready if available; otherwise fall back to DOMContentLoaded
+if (typeof window.jQuery !== 'undefined') {
+    $(document).ready(initPage);
+} else {
+    document.addEventListener('DOMContentLoaded', initPage);
+}

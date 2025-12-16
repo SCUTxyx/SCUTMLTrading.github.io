@@ -493,6 +493,135 @@
       </div>
     </section>
 
+    <!-- Weight & Quantile Threshold Selection (Ablation) -->
+    <section class="section hero is-light" id="param-selection">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Weight &amp; Threshold Selection (Ablation Study)</h2>
+    
+        <div class="content">
+          <p>
+            Our final strategy uses a <strong>conviction score</strong> to map signals into discrete positions
+            (<code>0</code>, <code>0.5</code>, <code>1.0</code>). We tune:
+            (1) the blending weights between the ML prediction score and the alpha-factor score, and
+            (2) the rolling quantile thresholds that trigger exit / half position.
+          </p>
+        </div>
+    
+        <div class="columns is-multiline">
+    
+          <!-- (A) Weight selection -->
+          <div class="column is-12">
+            <div class="box">
+              <h3 class="title is-5">A) Weight Selection: <code>w_alpha</code> vs <code>w_pred</code></h3>
+    
+              <div class="content">
+                <p>
+                  We define the daily conviction score as:
+                  <br>
+                  <code>score_t = w_pred · z(r_pred)_t + w_alpha · alpha_score_t</code>,
+                  where <code>z(r_pred)</code> is the standardized predicted next-day return (trained on 2018–2023),
+                  and <code>alpha_score</code> is a composite factor score.
+                  The strategy uses <strong>long-only</strong> exposure with a rolling history of scores.
+                </p>
+    
+                <ul>
+                  <li><strong>Constraint:</strong> <code>w_pred + w_alpha = 1</code></li>
+                  <li><strong>Search:</strong> <code>w_alpha ∈ [0, 1]</code> with step <code>0.02</code> (grid), <code>w_pred = 1 - w_alpha</code></li>
+                  <li><strong>Backtest window:</strong> 2024-01-01 to 2025-04-24, initial cash 100,000 CNY, fee rate 0</li>
+                  <li><strong>Fixed thresholds during this stage:</strong> <code>lookback=120</code>, <code>q_exit=0.05</code>, <code>q_half=0.11</code></li>
+                  <li><strong>Objective:</strong> maximize total return</li>
+                </ul>
+    
+                <p class="is-size-6">
+                  <strong>Best (from our grid search):</strong>
+                  <code>w_alpha = 0.22</code>, <code>w_pred = 0.78</code>
+                  (ratio <code>w_alpha / w_pred ≈ 0.282</code>), achieving
+                  <strong>+113.92%</strong> total return in this ablation setting.
+                </p>
+              </div>
+    
+              <!-- PDF: weight optimization -->
+              <div style="border-radius: 12px; overflow: hidden;">
+                <object data="static/images/w_alpha_w_pred_optimization_log.pdf#view=FitH&toolbar=0&navpanes=0"
+                        type="application/pdf"
+                        width="100%"
+                        height="620"
+                        style="border:0;">
+                  <div class="notification is-warning is-light" style="margin:0;">
+                    This PDF cannot be displayed in your browser. (Try Chrome / Edge on desktop.)
+                  </div>
+                </object>
+              </div>
+              <p class="has-text-centered is-size-7" style="margin-top:.5rem;">
+                Log-scale visualization of total return vs. <code>w_alpha / w_pred</code>.
+              </p>
+            </div>
+          </div>
+    
+          <!-- (B) q threshold selection -->
+          <div class="column is-12">
+            <div class="box">
+              <h3 class="title is-5">B) Rolling Quantile Thresholds: <code>q_exit</code> &amp; <code>q_half</code></h3>
+    
+              <div class="content">
+                <p>
+                  Given the score history over the most recent <code>lookback=120</code> days, we compute
+                  rolling quantile cutoffs:
+                  <code>thr_exit(t) = Quantile(score_hist, q_exit)</code>,
+                  <code>thr_half(t) = Quantile(score_hist, q_half)</code>.
+                  We then map today’s score into position:
+                  <strong>0</strong> if <code>score &lt; thr_exit</code>,
+                  <strong>0.5</strong> if <code>thr_exit ≤ score &lt; thr_half</code>,
+                  else <strong>1</strong>.
+                </p>
+    
+                <ul>
+                  <li><strong>Fixed weights:</strong> <code>w_pred=0.78</code>, <code>w_alpha=0.22</code></li>
+                  <li><strong>Search ranges:</strong> <code>q_exit ∈ [0.00, 0.20]</code>, <code>q_half ∈ [0.00, 0.40]</code> (step <code>0.01</code>)</li>
+                  <li><strong>Constraint:</strong> <code>q_exit &lt; q_half</code></li>
+                  <li><strong>Objective:</strong> maximize total return on 2024-01-01 to 2025-04-24</li>
+                </ul>
+    
+                <p class="is-size-6">
+                  <strong>Best (from our grid search):</strong>
+                  <code>q_exit = 0.09</code>, <code>q_half = 0.12</code>,
+                  achieving <strong>+71.89%</strong> total return in this threshold-tuning setting.
+                  Note that <code>q_exit</code> and <code>q_half</code> are <em>quantile levels</em>;
+                  the actual numeric thresholds change over time with the rolling score distribution.
+                </p>
+              </div>
+    
+              <!-- PDF: q optimization -->
+              <div style="border-radius: 12px; overflow: hidden;">
+                <object data="static/images/q_params_optimization_3d.pdf#view=FitH&toolbar=0&navpanes=0"
+                        type="application/pdf"
+                        width="100%"
+                        height="620"
+                        style="border:0;">
+                  <div class="notification is-warning is-light" style="margin:0;">
+                    This PDF cannot be displayed in your browser. (Try Chrome / Edge on desktop.)
+                  </div>
+                </object>
+              </div>
+              <p class="has-text-centered is-size-7" style="margin-top:.5rem;">
+                3D surface/scatter of total return over <code>(q_exit, q_half)</code>.
+              </p>
+            </div>
+          </div>
+    
+        </div>
+    
+        <div class="notification is-info is-light">
+          <strong>Tip:</strong> If the PDFs still show blank on GitHub Pages, the most common causes are:
+          (1) wrong path/case mismatch (GitHub is case-sensitive),
+          (2) PDF not actually committed/pushed,
+          (3) browser PDF viewer blocked (test in Chrome desktop).
+        </div>
+      </div>
+    </section>
+    <!-- End Weight & Quantile Threshold Selection -->
+
+
     <!-- Final Strategy Results -->
    <!-- Final Strategy Results -->
     <section class="section hero is-light" id="results">

@@ -290,6 +290,59 @@ body {
   font-weight: 500;
 }
 
+/* Forecast carousel (Prediction Model section) */
+.forecast-carousel {
+  position: relative;
+  overflow: hidden;
+}
+
+.forecast-carousel-inner {
+  position: relative;
+}
+
+.forecast-slide {
+  display: none;
+}
+
+.forecast-slide.is-active {
+  display: block;
+}
+
+.forecast-slide img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.forecast-carousel-nav {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.forecast-carousel-nav .nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary-color);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+}
+
+.forecast-carousel-nav .nav-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
 /* Pagination and Misc Improvements */
 .slider-pagination .slider-page {
   background: var(--primary-color);

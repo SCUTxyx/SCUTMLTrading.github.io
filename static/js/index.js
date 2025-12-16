@@ -119,6 +119,69 @@ function setupVideoCarouselAutoplay() {
     });
 }
 
+// Simple forecast carousel (for Prediction Model section)
+function setupForecastCarousel() {
+    const carousel = document.querySelector('.forecast-carousel');
+    if (!carousel) return;
+
+    const slides = carousel.querySelectorAll('.forecast-slide');
+    const prevBtn = carousel.querySelector('.forecast-prev');
+    const nextBtn = carousel.querySelector('.forecast-next');
+
+    if (slides.length === 0 || !prevBtn || !nextBtn) return;
+
+    let current = 0;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            if (i === index) {
+                slide.classList.add('is-active');
+            } else {
+                slide.classList.remove('is-active');
+            }
+        });
+    }
+
+    prevBtn.addEventListener('click', function() {
+        current = (current - 1 + slides.length) % slides.length;
+        showSlide(current);
+    });
+
+    nextBtn.addEventListener('click', function() {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+    });
+
+    // Basic touch support for mobile (swipe left/right)
+    let startX = null;
+    carousel.addEventListener('touchstart', function(e) {
+        if (e.touches && e.touches.length === 1) {
+            startX = e.touches[0].clientX;
+        }
+    });
+
+    carousel.addEventListener('touchend', function(e) {
+        if (startX === null) return;
+        const endX = e.changedTouches[0].clientX;
+        const diff = endX - startX;
+        const threshold = 40; // px
+
+        if (diff > threshold) {
+            // swipe right -> previous
+            current = (current - 1 + slides.length) % slides.length;
+            showSlide(current);
+        } else if (diff < -threshold) {
+            // swipe left -> next
+            current = (current + 1) % slides.length;
+            showSlide(current);
+        }
+        startX = null;
+    });
+
+    // Initialize first slide
+    showSlide(current);
+}
+
 $(document).ready(function() {
     // Check for click events on the navbar burger icon
 
@@ -138,5 +201,8 @@ $(document).ready(function() {
     
     // Setup video autoplay for carousel
     setupVideoCarouselAutoplay();
+
+    // Setup custom forecast carousel
+    setupForecastCarousel();
 
 })

@@ -363,53 +363,59 @@
         </div>
     
         <div class="box">
-          <div class="carousel carousel-animated carousel-animate-slide" data-autoplay="false">
-            <div class="carousel-container">
+          <div class="forecast-carousel">
+            <div class="forecast-carousel-inner">
               <!-- 1. Train close -->
-              <div class="carousel-item has-background is-active">
-                <img class="is-background" src="static/images/train_forecast_close.png" alt="Train forecast close"
-                     loading="lazy">
-                <div class="title">Train Forecast (Close)</div>
+              <div class="forecast-slide is-active">
+                <img src="static/images/train_forecast_close.png" alt="Train forecast close" loading="lazy">
+                <p class="has-text-centered is-size-6" style="margin-top:.5rem;">
+                  Train Forecast (Close)
+                </p>
               </div>
               <!-- 2. Train volume -->
-              <div class="carousel-item has-background">
-                <img class="is-background" src="static/images/train_forecast_volume.png" alt="Train forecast volume"
-                     loading="lazy">
-                <div class="title">Train Forecast (Volume)</div>
+              <div class="forecast-slide">
+                <img src="static/images/train_forecast_volume.png" alt="Train forecast volume" loading="lazy">
+                <p class="has-text-centered is-size-6" style="margin-top:.5rem;">
+                  Train Forecast (Volume)
+                </p>
               </div>
               <!-- 3. Valid close -->
-              <div class="carousel-item has-background">
-                <img class="is-background" src="static/images/valid_forecast_close.png" alt="Valid forecast close"
-                     loading="lazy">
-                <div class="title">Valid Forecast (Close)</div>
+              <div class="forecast-slide">
+                <img src="static/images/valid_forecast_close.png" alt="Valid forecast close" loading="lazy">
+                <p class="has-text-centered is-size-6" style="margin-top:.5rem;">
+                  Valid Forecast (Close)
+                </p>
               </div>
               <!-- 4. Valid volume -->
-              <div class="carousel-item has-background">
-                <img class="is-background" src="static/images/valid_forecast_volume.png" alt="Valid forecast volume"
-                     loading="lazy">
-                <div class="title">Valid Forecast (Volume)</div>
+              <div class="forecast-slide">
+                <img src="static/images/valid_forecast_volume.png" alt="Valid forecast volume" loading="lazy">
+                <p class="has-text-centered is-size-6" style="margin-top:.5rem;">
+                  Valid Forecast (Volume)
+                </p>
               </div>
               <!-- 5. Test close -->
-              <div class="carousel-item has-background">
-                <img class="is-background" src="static/images/test_forecast_close.png" alt="Test forecast close"
-                     loading="lazy">
-                <div class="title">Test Forecast (Close)</div>
+              <div class="forecast-slide">
+                <img src="static/images/test_forecast_close.png" alt="Test forecast close" loading="lazy">
+                <p class="has-text-centered is-size-6" style="margin-top:.5rem;">
+                  Test Forecast (Close)
+                </p>
               </div>
               <!-- 6. Test volume -->
-              <div class="carousel-item has-background">
-                <img class="is-background" src="static/images/test_forecast_volume.png" alt="Test forecast volume"
-                     loading="lazy">
-                <div class="title">Test Forecast (Volume)</div>
+              <div class="forecast-slide">
+                <img src="static/images/test_forecast_volume.png" alt="Test forecast volume" loading="lazy">
+                <p class="has-text-centered is-size-6" style="margin-top:.5rem;">
+                  Test Forecast (Volume)
+                </p>
               </div>
             </div>
     
-            <div class="carousel-navigation is-centered">
-              <div class="carousel-nav-left">
+            <div class="forecast-carousel-nav">
+              <button class="nav-btn forecast-prev" type="button" aria-label="Previous slide">
                 <i class="fa fa-chevron-left" aria-hidden="true"></i>
-              </div>
-              <div class="carousel-nav-right">
+              </button>
+              <button class="nav-btn forecast-next" type="button" aria-label="Next slide">
                 <i class="fa fa-chevron-right" aria-hidden="true"></i>
-              </div>
+              </button>
             </div>
           </div>
         </div>

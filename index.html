@@ -444,46 +444,263 @@
     <!-- Strategies Comparison -->
     <section class="section" id="strategies">
       <div class="container is-max-desktop">
-        <h2 class="title is-3">Strategy Design and Multi-Strategy Comparison</h2>
-        <div class="content">
-          <p>
-            We convert model predictions into trading signals and compare multiple strategies. Example candidates:
-          </p>
-          <ul>
-            <li><strong>Buy & Hold:</strong> baseline holding Tencent stock throughout the backtest window.</li>
-            <li><strong>MA Crossover:</strong> a purely technical baseline strategy.</li>
-            <li><strong>Prediction Threshold Strategy:</strong> go long when predicted return exceeds a threshold, otherwise stay in cash.</li>
-            <li><strong>Risk-Controlled Strategy:</strong> apply position sizing and drawdown constraints to reduce tail risk.</li>
-          </ul>
-          <p>
-            For each strategy, we evaluate net value curve, excess return over baseline, drawdown, turnover, and risk-adjusted metrics.
-          </p>
+        <h2 class="title is-3">Strategy Comparison</h2>
+    
+        <!-- Part 1: different strategies -->
+        <div class="box">
+          <h3 class="title is-4">Part I — Comparing Different Strategies</h3>
+    
+          <div class="content">
+            <p>
+              We benchmark our pipeline against several alternative strategies implemented in Backtrader. All strategies
+              use the same data window (2024-01-01 to 2025-04-24) and initial cash (100,000 CNY).
+            </p>
+    
+            <h4 class="title is-6">Strategies included</h4>
+            <ul>
+              <li><strong>Benchmark (Buy &amp; Hold):</strong> fully invested throughout the backtest.</li>
+              <li><strong>StrategyH_HighAlphaOverlay:</strong> score-ranked overlay around beta=1 (more aggressive).</li>
+              <li><strong>StrategyB_BalancedEnhanced:</strong> quantile-based 0.7 / 1.0 / 1.3 exposure (balanced).</li>
+              <li><strong>StrategyD_DefensiveMeanRev:</strong> defensive mean-reversion with smaller exposure.</li>
+              <li><strong>StrategyHPP_QlibStyle:</strong> Qlib-style aggressive enhancement with risk controls.</li>
+              <li><strong>StrategyBPP_QlibStyle:</strong> Qlib-style balanced enhancement with stricter risk controls.</li>
+            </ul>
+          </div>
+    
+          <h4 class="title is-5">Backtest Summary (Alternative Strategies)</h4>
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth is-size-7">
+              <thead>
+                <tr>
+                  <th>Strategy</th>
+                  <th>Final Value (CNY)</th>
+                  <th>Total Return</th>
+                  <th>Annual Return</th>
+                  <th>Annual Vol</th>
+                  <th>Sharpe</th>
+                  <th>Max Drawdown</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Benchmark_BuyAndHold</td>
+                  <td>163,127.2</td>
+                  <td>63.13%</td>
+                  <td>47.02%</td>
+                  <td>34.32%</td>
+                  <td>1.37</td>
+                  <td>-23.49%</td>
+                </tr>
+                <tr>
+                  <td>StrategyH_HighAlphaOverlay</td>
+                  <td>151,876.7</td>
+                  <td>51.88%</td>
+                  <td>38.97%</td>
+                  <td>24.51%</td>
+                  <td>1.59</td>
+                  <td>-12.93%</td>
+                </tr>
+                <tr>
+                  <td>StrategyB_BalancedEnhanced</td>
+                  <td>151,774.2</td>
+                  <td>51.77%</td>
+                  <td>38.90%</td>
+                  <td>28.27%</td>
+                  <td>1.38</td>
+                  <td>-16.25%</td>
+                </tr>
+                <tr>
+                  <td>StrategyD_DefensiveMeanRev</td>
+                  <td>123,608.0</td>
+                  <td>23.61%</td>
+                  <td>18.16%</td>
+                  <td>18.16%</td>
+                  <td>1.00</td>
+                  <td>-12.92%</td>
+                </tr>
+                <tr>
+                  <td>StrategyHPP_QlibStyle</td>
+                  <td>146,811.1</td>
+                  <td>46.81%</td>
+                  <td>35.31%</td>
+                  <td>24.74%</td>
+                  <td>1.43</td>
+                  <td>-12.93%</td>
+                </tr>
+                <tr>
+                  <td>StrategyBPP_QlibStyle</td>
+                  <td>158,576.4</td>
+                  <td>58.58%</td>
+                  <td>43.78%</td>
+                  <td>30.63%</td>
+                  <td>1.43</td>
+                  <td>-19.57%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+    
+          <div class="content">
+            <h4 class="title is-5">Why can these strategies underperform Buy &amp; Hold?</h4>
+            <ul>
+              <li>
+                <strong>Beta reduction / time-out-of-market:</strong> most alternative strategies deliberately spend time
+                below 100% exposure to control risk. In a strong uptrend, <em>reducing exposure</em> can lower returns.
+              </li>
+              <li>
+                <strong>Noisy out-of-sample signals:</strong> if the prediction/factor score is weak (low IC / ~50% direction accuracy),
+                timing trades may miss rallies and create whipsaws, hurting total return.
+              </li>
+              <li>
+                <strong>Risk controls trade return for stability:</strong> trend/volatility/drawdown filters help avoid deep losses,
+                but they also cut participation during fast rebounds.
+              </li>
+            </ul>
+    
+            <h4 class="title is-5">Advantages of these strategies</h4>
+            <ul>
+              <li>
+                <strong>Better drawdown control:</strong> e.g., StrategyH_HighAlphaOverlay and StrategyHPP_QlibStyle
+                reduce max drawdown to ~<strong>-12.9%</strong> vs <strong>-23.5%</strong> for Buy &amp; Hold.
+              </li>
+              <li>
+                <strong>Lower volatility / higher risk-adjusted performance:</strong> StrategyH_HighAlphaOverlay achieves a higher
+                Sharpe (1.59) with much lower volatility (24.5%).
+              </li>
+              <li>
+                <strong>Different “styles” for different preferences:</strong> DefensiveMeanRev is designed for stability,
+                while Qlib-style strategies add systematic risk controls (trend, vol, drawdown guards, position smoothing).
+              </li>
+            </ul>
+    
+            <div class="notification is-info is-light">
+              <strong>Takeaway:</strong> The baseline is hard to beat in a trending market. Alternative strategies are still valuable
+              because they often deliver <em>much smaller drawdowns</em> and <em>smoother equity curves</em>.
+            </div>
+          </div>
         </div>
-
-        <!-- Comparison visuals -->
-        <div class="columns is-multiline">
-          <div class="column is-12">
-            <figure class="image">
-              <!-- TODO: Put an image at static/images/strategy_compare_equity.png -->
-              <img src="static/images/strategy_compare_equity.png" alt="Equity curve comparison" loading="lazy">
-            </figure>
-            <p class="has-text-centered is-size-6">Equity curves: multi-strategy comparison (placeholder).</p>
+    
+        <!-- Part 2: final strategy + horizon variants -->
+        <div class="box">
+          <h3 class="title is-4">Part II — Our Final Strategy and Horizon Variants</h3>
+    
+          <div class="content">
+            <h4 class="title is-5">Final Strategy: Conviction_Filter_Strategy</h4>
+            <p>
+              Our final submission is a <strong>conviction-based long-only strategy</strong>. Each day we compute a blended score
+              from (i) the standardized ML predicted return score and (ii) a composite alpha-factor score:
+              <br>
+              <code>score_t = w_pred · z(r_pred)_t + w_alpha · alpha_score_t</code>.
+            </p>
+            <p>
+              We then compute rolling quantile thresholds from recent score history (lookback window) and map
+              score into <strong>discrete exposure</strong>: 0 / 0.5 / 1.0. This design improves robustness and reduces turnover
+              compared to continuous leverage scaling.
+            </p>
+    
+            <h4 class="title is-6">Ablation-selected best parameters</h4>
+            <ul>
+              <li><strong>Best weights:</strong> <code>w_alpha = 0.22</code>, <code>w_pred = 0.78</code> (found by grid ablation).</li>
+              <li><strong>Best thresholds:</strong> <code>q_exit = 0.09</code>, <code>q_half = 0.12</code> (found by grid ablation with constraint <code>q_exit &lt; q_half</code>).</li>
+            </ul>
           </div>
-
-          <div class="column is-6">
-            <figure class="image">
-              <!-- TODO: Put an image at static/images/strategy_compare_drawdown.png -->
-              <img src="static/images/strategy_compare_drawdown.png" alt="Drawdown comparison" loading="lazy">
-            </figure>
-            <p class="has-text-centered is-size-6">Drawdown curves comparison (placeholder).</p>
+    
+          <h4 class="title is-5">Final Strategy Performance (Overall)</h4>
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth is-size-7">
+              <thead>
+                <tr>
+                  <th>Strategy</th>
+                  <th>Final Value (CNY)</th>
+                  <th>Total Return</th>
+                  <th>Annual Return</th>
+                  <th>Annual Vol</th>
+                  <th>Sharpe</th>
+                  <th>Max Drawdown</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Benchmark_BuyAndHold</td>
+                  <td>163,127.2</td>
+                  <td>63.13%</td>
+                  <td>47.02%</td>
+                  <td>34.32%</td>
+                  <td>1.37</td>
+                  <td>-23.49%</td>
+                </tr>
+                <tr>
+                  <td><strong>Conviction_Filter_Strategy (Final)</strong></td>
+                  <td><strong>224,877.5</strong></td>
+                  <td><strong>124.88%</strong></td>
+                  <td><strong>89.30%</strong></td>
+                  <td><strong>27.00%</strong></td>
+                  <td><strong>3.31</strong></td>
+                  <td><strong>-12.93%</strong></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-
-          <div class="column is-6">
-            <figure class="image">
-              <!-- TODO: Put an image at static/images/strategy_metrics_table.png -->
-              <img src="static/images/strategy_metrics_table.png" alt="Strategy metrics table" loading="lazy">
-            </figure>
-            <p class="has-text-centered is-size-6">Performance metrics table (placeholder).</p>
+    
+          <div class="content">
+            <h4 class="title is-5">Horizon Variants (pre1 / pre3 / pre5 / 10-day→1-day)</h4>
+            <p>
+              To test robustness, we run the same strategy logic under four forecasting settings:
+            </p>
+            <ul>
+              <li><strong>pre1:</strong> predict the next-day return and trade daily.</li>
+              <li><strong>pre3:</strong> predict 3-day ahead (smoother signal, potentially lower noise but more lag).</li>
+              <li><strong>pre5:</strong> predict 5-day ahead (even smoother, but may react slower to regime changes).</li>
+              <li><strong>10-day window → 1-day prediction:</strong> use the previous 10 trading days as input features to predict next-day return (more context for short-horizon prediction).</li>
+            </ul>
+            <p class="is-size-7">
+              Below is the table template. Replace the TODO cells with the values from your
+              <code>backtest_results_longonly.csv</code> (pre1/pre3/pre5/10→1). If you paste that CSV here, I can fill the table for you.
+            </p>
+          </div>
+    
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth is-size-7">
+              <thead>
+                <tr>
+                  <th>Setting</th>
+                  <th>Final Value (CNY)</th>
+                  <th>Total Return</th>
+                  <th>Annual Return</th>
+                  <th>Annual Vol</th>
+                  <th>Sharpe</th>
+                  <th>Max Drawdown</th>
+                  <th>Interpretation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>pre1 (1-day ahead)</td>
+                  <td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td>
+                  <td>Most responsive, but most sensitive to noise.</td>
+                </tr>
+                <tr>
+                  <td>pre3 (3-day ahead)</td>
+                  <td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td>
+                  <td>Smoother signal; may reduce whipsaws but can lag turning points.</td>
+                </tr>
+                <tr>
+                  <td>pre5 (5-day ahead)</td>
+                  <td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td>
+                  <td>Even smoother; can miss fast rebounds but improves stability.</td>
+                </tr>
+                <tr>
+                  <td>10-day window → 1-day pred</td>
+                  <td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td><td>TODO</td>
+                  <td>Uses richer short-term context; often improves robustness vs pure 1-day inputs.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+    
+          <div class="notification is-warning is-light">
+            <strong>Note:</strong> If a longer-horizon variant underperforms, it is often because the signal reacts slower to
+            fast price moves. If a shorter-horizon variant underperforms, it is often due to noise and frequent regime flips.
           </div>
         </div>
       </div>

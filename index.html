@@ -958,6 +958,143 @@
       </div>
     </section>
 
+    <!-- Evaluation (Strengths Only) -->
+    <section class="section" id="evaluation">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Evaluation &amp; Key Advantages</h2>
+    
+        <div class="content">
+          <p>
+            We evaluate the final submission (<strong>Conviction_Filter_Strategy</strong>) on the out-of-sample backtest
+            period <strong>2024-01-01</strong> to <strong>2025-04-24</strong> with <strong>100,000 CNY</strong> initial capital.
+            The strategy is designed to achieve <strong>index enhancement</strong> (excess return over Buy &amp; Hold) while
+            keeping <strong>maximum drawdown</strong> as low as possible.
+          </p>
+        </div>
+    
+        <div class="box">
+          <h3 class="title is-5">1) Performance vs. Benchmark (Buy &amp; Hold)</h3>
+    
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Final Strategy</th>
+                  <th>Buy &amp; Hold</th>
+                  <th>Improvement</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Final Value (CNY)</td>
+                  <td><strong>224,877.5</strong></td>
+                  <td>163,127.2</td>
+                  <td><strong>+61,750.3</strong></td>
+                </tr>
+                <tr>
+                  <td>Total Return</td>
+                  <td><strong>124.88%</strong></td>
+                  <td>63.13%</td>
+                  <td><strong>+61.75 pp</strong></td>
+                </tr>
+                <tr>
+                  <td>Annualized Return</td>
+                  <td><strong>89.30%</strong></td>
+                  <td>47.02%</td>
+                  <td><strong>+42.28 pp</strong></td>
+                </tr>
+                <tr>
+                  <td>Annualized Volatility</td>
+                  <td><strong>27.00%</strong></td>
+                  <td>34.32%</td>
+                  <td><strong>-7.32 pp</strong></td>
+                </tr>
+                <tr>
+                  <td>Sharpe Ratio</td>
+                  <td><strong>3.31</strong></td>
+                  <td>1.37</td>
+                  <td><strong>+1.94</strong></td>
+                </tr>
+                <tr>
+                  <td>Maximum Drawdown</td>
+                  <td><strong>-12.93%</strong></td>
+                  <td>-23.49%</td>
+                  <td><strong>+10.56 pp (less drawdown)</strong></td>
+                </tr>
+                <tr>
+                  <td>Calmar Ratio</td>
+                  <td><strong>6.91</strong></td>
+                  <td>2.00</td>
+                  <td><strong>+4.91</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+    
+          <div class="content">
+            <p class="is-size-6">
+              <strong>Summary:</strong> The final strategy more than doubles the benchmark’s total return while cutting
+              the maximum drawdown by nearly half, delivering substantially stronger risk-adjusted performance.
+            </p>
+          </div>
+        </div>
+    
+        <div class="box">
+          <h3 class="title is-5">2) Why the Strategy Works (Strengths)</h3>
+    
+          <div class="content">
+            <ul>
+              <li>
+                <strong>Signal fusion (ML + factors):</strong> we combine a standardized ML prediction score with a composite
+                alpha-factor score using learned weights (<code>w_pred</code>, <code>w_alpha</code>). This reduces reliance on a single
+                noisy signal source and improves robustness across market conditions.
+              </li>
+              <li>
+                <strong>Distribution-aware decision rule:</strong> instead of fixed numeric thresholds, we use rolling
+                <em>quantile thresholds</em> (<code>q_exit</code>, <code>q_half</code>) computed from recent score history. This adapts
+                automatically when the score distribution shifts (e.g., volatility regime changes).
+              </li>
+              <li>
+                <strong>Discrete exposure (0 / 0.5 / 1):</strong> mapping scores into a small number of stable position levels
+                prevents over-trading and reduces whipsaw risk compared to continuous scaling.
+              </li>
+              <li>
+                <strong>Ablation-driven parameter selection:</strong> key parameters are selected via systematic grid-search hinting
+                (weight tuning and threshold tuning), ensuring the final configuration is supported by empirical evidence rather than
+                manual trial-and-error.
+              </li>
+              <li>
+                <strong>Better downside control:</strong> the strategy reduces deep drawdowns by exiting or de-risking when the conviction
+                score falls below the lower quantile, which is especially important for index enhancement tasks requiring controlled risk.
+              </li>
+            </ul>
+          </div>
+        </div>
+    
+        <div class="box">
+          <h3 class="title is-5">3) Robustness Check Across Forecast Horizons</h3>
+    
+          <div class="content">
+            <p>
+              We also test the same trading logic under multiple forecasting settings (<strong>pre1</strong>, <strong>pre3</strong>,
+              <strong>pre5</strong>, and <strong>10-day window → 1-day prediction</strong>). Results show that:
+            </p>
+            <ul>
+              <li><strong>pre3</strong> typically offers a good balance between responsiveness and smoothness, reducing noise-driven flips.</li>
+              <li><strong>pre5</strong> is more stable but can lag during fast trend reversals.</li>
+              <li><strong>10-day → 1-day</strong> provides richer context for next-day decisions and achieves the strongest overall trade-off.</li>
+            </ul>
+            <p class="is-size-7">
+              (Detailed horizon-by-horizon metrics are reported in the Strategy Comparison section.)
+            </p>
+          </div>
+        </div>
+    
+      </div>
+    </section>
+
+
     <!-- Footer -->
     <footer class="footer">
       <div class="container">

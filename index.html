@@ -278,9 +278,10 @@
     </section>
 
     <!-- Data Preprocessing -->
-    <section class="section hero is-light">
+    <section class="section hero is-light" id="data-preprocessing">
       <div class="container is-max-desktop">
         <h2 class="title is-3">Data Preprocessing</h2>
+    
         <div class="content">
           <ul>
             <li><strong>Cleaning:</strong> handle missing values, non-trading days, and abnormal entries.</li>
@@ -289,13 +290,25 @@
             <li><strong>Normalization:</strong> apply scaling/standardization where appropriate (especially for neural nets).</li>
             <li><strong>Walk-forward split:</strong> avoid leakage by respecting time order during training/validation.</li>
           </ul>
+    
           <p>
-            <strong>Tip:</strong> In your final report, explicitly state target definition, feature window sizes,
+            <strong>Tip:</strong> In the final report, explicitly state target definition, feature window sizes,
             and how you prevent look-ahead bias.
           </p>
         </div>
+    
+        <div class="box">
+          <figure class="image">
+            <img src="static/images/dataprocessing.png" alt="Data preprocessing workflow" loading="lazy">
+          </figure>
+          <p class="has-text-centered is-size-7" style="margin-top:.5rem;">
+            Data preprocessing workflow used in this project.
+          </p>
+        </div>
+    
       </div>
     </section>
+
 
     <!-- Factor Mining -->
     <section class="section" id="factors">

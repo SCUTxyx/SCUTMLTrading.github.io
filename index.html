@@ -733,82 +733,111 @@
 
 
     <!-- Weight & Quantile Threshold Selection (Ablation) -->
+    <!-- Weight & Quantile Threshold Selection (Ablation) — PNG version -->
     <section class="section hero is-light" id="param-selection">
       <div class="container is-max-desktop">
         <h2 class="title is-3">Weight &amp; Threshold Selection (Ablation Study)</h2>
     
         <div class="content">
           <p>
-            Our final strategy uses a <strong>conviction score</strong> to map signals into discrete positions
-            (<code>0</code>, <code>0.5</code>, <code>1.0</code>). We tune:
-            (1) the blending weights between the ML prediction score and the alpha-factor score, and
-            (2) the rolling quantile thresholds that trigger exit / half position.
+            Our final strategy maps a blended <strong>conviction score</strong> into discrete exposure
+            (<code>0</code>, <code>0.5</code>, <code>1.0</code>). We tune two key components:
+            (1) the blending weights between ML prediction and alpha-factor signals, and
+            (2) the rolling quantile thresholds that control exit / half exposure.
           </p>
         </div>
     
+        <!-- Quick summary cards -->
         <div class="columns is-multiline">
-    
-          <!-- (A) Weight selection -->
-          <div class="column is-12">
+          <div class="column is-6">
             <div class="box">
-              <h3 class="title is-5">A) Weight Selection: <code>w_alpha</code> vs <code>w_pred</code></h3>
+              <p class="is-size-7 has-text-grey">Best weights</p>
+              <p class="title is-5" style="margin:.25rem 0;">
+                <code>w_alpha = 0.22</code>, <code>w_pred = 0.78</code>
+              </p>
+              <p class="is-size-7 has-text-grey">
+                Found by grid ablation under fixed thresholds (lookback=120, q_exit=0.05, q_half=0.11).
+              </p>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="box">
+              <p class="is-size-7 has-text-grey">Best thresholds</p>
+              <p class="title is-5" style="margin:.25rem 0;">
+                <code>q_exit = 0.09</code>, <code>q_half = 0.12</code>
+              </p>
+              <p class="is-size-7 has-text-grey">
+                Found by grid ablation with constraint <code>q_exit &lt; q_half</code> under fixed weights.
+              </p>
+            </div>
+          </div>
+        </div>
+    
+        <!-- (A) Weight selection -->
+        <div class="box">
+          <div class="columns is-vcentered is-multiline">
+            <div class="column is-5">
+              <h3 class="title is-4" style="margin-bottom:.75rem;">A) Weight Selection</h3>
     
               <div class="content">
                 <p>
                   We define the daily conviction score as:
                   <br>
-                  <code>score_t = w_pred · z(r_pred)_t + w_alpha · alpha_score_t</code>,
-                  where <code>z(r_pred)</code> is the standardized predicted next-day return (trained on 2018–2023),
-                  and <code>alpha_score</code> is a composite factor score.
-                  The strategy uses <strong>long-only</strong> exposure with a rolling history of scores.
+                  <code>score_t = w_pred · z(r_pred)_t + w_alpha · alpha_score_t</code>.
                 </p>
-    
                 <ul>
                   <li><strong>Constraint:</strong> <code>w_pred + w_alpha = 1</code></li>
-                  <li><strong>Search:</strong> <code>w_alpha ∈ [0, 1]</code> with step <code>0.02</code> (grid), <code>w_pred = 1 - w_alpha</code></li>
-                  <li><strong>Backtest window:</strong> 2024-01-01 to 2025-04-24, initial cash 100,000 CNY, fee rate 0</li>
-                  <li><strong>Fixed thresholds during this stage:</strong> <code>lookback=120</code>, <code>q_exit=0.05</code>, <code>q_half=0.11</code></li>
+                  <li><strong>Search:</strong> <code>w_alpha ∈ [0, 1]</code> with step <code>0.02</code>, <code>w_pred = 1 - w_alpha</code></li>
+                  <li><strong>Backtest:</strong> 2024-01-01 to 2025-04-24, initial cash 100,000 CNY</li>
+                  <li><strong>Fixed during this stage:</strong> <code>lookback=120</code>, <code>q_exit=0.05</code>, <code>q_half=0.11</code></li>
                   <li><strong>Objective:</strong> maximize total return</li>
                 </ul>
     
                 <p class="is-size-6">
-                  <strong>Best (from our grid search):</strong>
-                  <code>w_alpha = 0.22</code>, <code>w_pred = 0.78</code>
-                  (ratio <code>w_alpha / w_pred ≈ 0.282</code>), achieving
-                  <strong>+113.92%</strong> total return in this ablation setting.(Attention: this is the data before we modified the q value. The data described in the previous part is the final data after adjusting the weights and thresholds.)
+                  <strong>Best result:</strong> <code>w_alpha=0.22</code>, <code>w_pred=0.78</code>.
+                  This indicates the ML prediction dominates the score, while alpha factors provide complementary stabilization.
+                </p>
+    
+                <p class="is-size-7 has-text-grey">
+                  Note: this weight ablation is performed before the final <code>q</code> tuning; the final reported performance
+                  uses both the optimal weights and thresholds.
                 </p>
               </div>
+            </div>
     
-              <!-- PDF: weight optimization -->
-              <div style="border-radius: 12px; overflow: hidden;">
-                <object data="static/images/w_alpha_w_pred_optimization_log.pdf#view=FitH&toolbar=0&navpanes=0"
-                        type="application/pdf"
-                        width="100%"
-                        height="620"
-                        style="border:0;">
-                  <div class="notification is-warning is-light" style="margin:0;">
-                    This PDF cannot be displayed in your browser. (Try Chrome / Edge on desktop.)
-                  </div>
-                </object>
-              </div>
-              <p class="has-text-centered is-size-7" style="margin-top:.5rem;">
-                Log-scale visualization of total return vs. <code>w_alpha / w_pred</code>.
+            <div class="column is-7">
+              <figure class="image">
+                <!-- PNG version -->
+                <img
+                  src="static/images/w_alpha_w_pred_optimization_log_page_1.png"
+                  alt="Weight optimization: w_alpha vs w_pred (log visualization)"
+                  loading="lazy"
+                  style="width:100%; height:auto; display:block; border-radius:12px;"
+                >
+              </figure>
+              <p class="has-text-centered is-size-7" style="margin-top:.6rem;">
+                Log-scale visualization of total return across the grid of <code>w_alpha / w_pred</code> ratios.
+                The optimum appears near <code>w_alpha=0.22</code>, <code>w_pred=0.78</code>.
               </p>
             </div>
           </div>
+        </div>
     
-          <!-- (B) q threshold selection -->
-          <div class="column is-12">
-            <div class="box">
-              <h3 class="title is-5">B) Rolling Quantile Thresholds: <code>q_exit</code> &amp; <code>q_half</code></h3>
+        <!-- (B) Threshold selection -->
+        <div class="box">
+          <div class="columns is-vcentered is-multiline">
+            <div class="column is-5">
+              <h3 class="title is-4" style="margin-bottom:.75rem;">B) Quantile Threshold Selection</h3>
     
               <div class="content">
                 <p>
-                  Given the score history over the most recent <code>lookback=120</code> days, we compute
-                  rolling quantile cutoffs:
+                  Using score history over the most recent <code>lookback=120</code> days, we compute rolling quantile cutoffs:
+                  <br>
                   <code>thr_exit(t) = Quantile(score_hist, q_exit)</code>,
                   <code>thr_half(t) = Quantile(score_hist, q_half)</code>.
-                  We then map today’s score into position:
+                </p>
+                <p>
+                  Today’s score is mapped to exposure:
                   <strong>0</strong> if <code>score &lt; thr_exit</code>,
                   <strong>0.5</strong> if <code>thr_exit ≤ score &lt; thr_half</code>,
                   else <strong>1</strong>.
@@ -818,39 +847,43 @@
                   <li><strong>Fixed weights:</strong> <code>w_pred=0.78</code>, <code>w_alpha=0.22</code></li>
                   <li><strong>Search ranges:</strong> <code>q_exit ∈ [0.00, 0.20]</code>, <code>q_half ∈ [0.00, 0.40]</code> (step <code>0.01</code>)</li>
                   <li><strong>Constraint:</strong> <code>q_exit &lt; q_half</code></li>
-                  <li><strong>Objective:</strong> maximize total return on 2024-01-01 to 2025-04-24</li>
+                  <li><strong>Objective:</strong> maximize total return</li>
                 </ul>
     
                 <p class="is-size-6">
-                  <strong>Best (from our grid search):</strong>
-                  <code>q_exit = 0.09</code>, <code>q_half = 0.12</code>,
-                  achieving <strong>+71.89%</strong> total return in this threshold-tuning setting.
-                  Note that <code>q_exit</code> and <code>q_half</code> are <em>quantile levels</em>;
-                  the actual numeric thresholds change over time with the rolling score distribution.
+                  <strong>Best result:</strong> <code>q_exit=0.09</code>, <code>q_half=0.12</code>.
+                  Quantile thresholds are robust because they <em>adapt automatically</em> when the score distribution shifts.
                 </p>
               </div>
+            </div>
     
-              <!-- PDF: q optimization -->
-              <div style="border-radius: 12px; overflow: hidden;">
-                <object data="static/images/q_params_optimization_3d.pdf#view=FitH&toolbar=0&navpanes=0"
-                        type="application/pdf"
-                        width="100%"
-                        height="620"
-                        style="border:0;">
-                  <div class="notification is-warning is-light" style="margin:0;">
-                    This PDF cannot be displayed in your browser. (Try Chrome / Edge on desktop.)
-                  </div>
-                </object>
-              </div>
-              <p class="has-text-centered is-size-7" style="margin-top:.5rem;">
-                3D surface/scatter of total return over <code>(q_exit, q_half)</code>.
+            <div class="column is-7">
+              <figure class="image">
+                <!-- PNG version -->
+                <img
+                  src="static/images/q_params_optimization_3d_page_1.png"
+                  alt="Quantile threshold optimization (q_exit, q_half)"
+                  loading="lazy"
+                  style="width:100%; height:auto; display:block; border-radius:12px;"
+                >
+              </figure>
+              <p class="has-text-centered is-size-7" style="margin-top:.6rem;">
+                3D visualization of total return over <code>(q_exit, q_half)</code>.
+                The best region lies around <code>q_exit=0.09</code>, <code>q_half=0.12</code> under the constraint <code>q_exit &lt; q_half</code>.
               </p>
             </div>
           </div>
-    
         </div>
+    
+        <!-- Why this matters -->
+        <div class="notification is-info is-light">
+          <strong>Why this tuning matters:</strong> weights determine how much we trust ML vs. alpha signals, while quantile thresholds
+          convert noisy scores into stable actions. Together they improve both <em>return</em> and <em>drawdown control</em>.
+        </div>
+    
       </div>
     </section>
+
     <!-- End Weight & Quantile Threshold Selection -->
 
 
@@ -909,7 +942,7 @@
               <h3 class="title is-6">Equity Curve (NAV)</h3>
               <figure class="image">
                 <img
-                  src="static/images/report_nav_curve_1.png"
+                  src="static/images/report_nav_curve_page_1.png"
                   alt="NAV curve comparison"
                   loading="lazy"
                   style="width:100%; height:auto; display:block;"
@@ -928,7 +961,7 @@
               <h3 class="title is-6">Drawdown Curve</h3>
               <figure class="image">
                 <img
-                  src="static/images/report_drawdown_curve_1.png"
+                  src="static/images/report_drawdown_curve_page_1.png"
                   alt="Drawdown curve comparison"
                   loading="lazy"
                   style="width:100%; height:auto; display:block;"
@@ -947,7 +980,7 @@
               <h3 class="title is-6">Position / Exposure Over Time</h3>
               <figure class="image">
                 <img
-                  src="static/images/report_position_curve_1.png"
+                  src="static/images/report_position_curve_page_1.png"
                   alt="Position/exposure over time"
                   loading="lazy"
                   style="width:100%; height:auto; display:block;"
@@ -967,7 +1000,7 @@
               <h3 class="title is-6">Return by Score Quantile</h3>
               <figure class="image">
                 <img
-                  src="static/images/report_quantile_return_1.png"
+                  src="static/images/report_quantile_return_page_1.png"
                   alt="Return by score quantile"
                   loading="lazy"
                   style="width:100%; height:auto; display:block;"
@@ -986,7 +1019,7 @@
               <h3 class="title is-6">Score &amp; Rolling Thresholds</h3>
               <figure class="image">
                 <img
-                  src="static/images/report_score_thresholds_1.png"
+                  src="static/images/report_score_thresholds_page_1.png"
                   alt="Score and rolling quantile thresholds"
                   loading="lazy"
                   style="width:100%; height:auto; display:block;"

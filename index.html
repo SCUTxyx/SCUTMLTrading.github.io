@@ -479,6 +479,7 @@
     </section>
 
     <!-- Final Strategy Results -->
+   <!-- Final Strategy Results -->
     <section class="section hero is-light" id="results">
       <div class="container is-max-desktop">
         <h2 class="title is-3">Final Strategy Results</h2>
@@ -489,39 +490,74 @@
             The backtest runs from <strong>2024-01-01</strong> to <strong>2025-04-24</strong> with initial capital
             <strong>100,000 CNY</strong>.
           </p>
+          <p class="is-size-7">
+            Note: PDF figures are embedded using <code>&lt;object type="application/pdf"&gt;</code> for better compatibility.
+            If the preview does not show up, please view the page via GitHub Pages or a local HTTP server (not <code>file://</code>).
+          </p>
         </div>
     
+        <!-- PDF figures (large, full width) -->
         <div class="columns is-multiline">
-          <div class="column is-6">
+    
+          <div class="column is-12">
             <div class="box">
               <h3 class="title is-6">Equity Curve (NAV)</h3>
-              <iframe src="static/images/final/report_nav_curve.pdf#view=FitH"
-                      width="100%" height="460" style="border:0; border-radius:12px;" title="NAV curve"></iframe>
-              <p class="has-text-centered is-size-7">Net asset value curve over the backtest window.</p>
+              <object
+                data="static/images/report_nav_curve.pdf#page=1&zoom=page-width"
+                type="application/pdf"
+                width="100%"
+                height="760">
+                <p class="has-text-centered is-size-7">
+                  PDF preview is not available in this browser.
+                </p>
+              </object>
+              <p class="has-text-centered is-size-7" style="margin-top:.5rem;">
+                Net asset value curve over the backtest window.
+              </p>
             </div>
           </div>
     
-          <div class="column is-6">
+          <div class="column is-12">
             <div class="box">
               <h3 class="title is-6">Drawdown Curve</h3>
-              <iframe src="static/images/final/report_drawdown_curve.pdf#view=FitH"
-                      width="100%" height="460" style="border:0; border-radius:12px;" title="Drawdown curve"></iframe>
-              <p class="has-text-centered is-size-7">Drawdown comparison (risk control effectiveness).</p>
+              <object
+                data="static/images/report_drawdown_curve.pdf#page=1&zoom=page-width"
+                type="application/pdf"
+                width="100%"
+                height="760">
+                <p class="has-text-centered is-size-7">
+                  PDF preview is not available in this browser.
+                </p>
+              </object>
+              <p class="has-text-centered is-size-7" style="margin-top:.5rem;">
+                Drawdown comparison (risk control effectiveness).
+              </p>
             </div>
           </div>
     
           <div class="column is-12">
             <div class="box">
               <h3 class="title is-6">Position / Exposure Over Time</h3>
-              <iframe src="static/images/final/report_position_curve.pdf#view=FitH"
-                      width="100%" height="520" style="border:0; border-radius:12px;" title="Position curve"></iframe>
-              <p class="has-text-centered is-size-7">Discrete exposure levels (0 / 0.5 / 1) driven by signal + thresholds.</p>
+              <object
+                data="static/image/report_position_curve.pdf#page=1&zoom=page-width"
+                type="application/pdf"
+                width="100%"
+                height="620">
+                <p class="has-text-centered is-size-7">
+                  PDF preview is not available in this browser.
+                </p>
+              </object>
+              <p class="has-text-centered is-size-7" style="margin-top:.5rem;">
+                Discrete exposure levels (0 / 0.5 / 1) driven by signal + thresholds.
+              </p>
             </div>
           </div>
+    
         </div>
     
+        <!-- Metrics table -->
         <div class="box">
-          <h3 class="title is-6">Performance & Risk Metrics</h3>
+          <h3 class="title is-6">Performance &amp; Risk Metrics</h3>
           <div class="table-container">
             <table class="table is-striped is-fullwidth">
               <thead>
